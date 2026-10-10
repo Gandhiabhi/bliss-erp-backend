@@ -9,7 +9,7 @@ async function testAll() {
   const saRes = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'superadmin@blishspa.com', password: 'Admin@123456' }),
+    body: JSON.stringify({ email: 'bhairaram@gmail.com', password: 'Bhairaram@123' }),
   });
   const saJson = await saRes.json();
   assert.strictEqual(saJson.success, true, 'Super admin login should succeed');

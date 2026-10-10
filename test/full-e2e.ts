@@ -14,7 +14,7 @@ async function runFullE2ETestSuite() {
   const badLoginRes = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'superadmin@blishspa.com', password: 'WrongPassword999!' }),
+    body: JSON.stringify({ email: 'bhairaram@gmail.com', password: 'WrongPassword999!' }),
   });
   assert.strictEqual(badLoginRes.status, 401, 'Invalid password must return 401 Unauthorized');
   console.log('   ✓ Invalid credentials correctly rejected (401 Unauthorized)');
@@ -34,7 +34,7 @@ async function runFullE2ETestSuite() {
   const saRes = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'superadmin@blishspa.com', password: 'Admin@123456' }),
+    body: JSON.stringify({ email: 'bhairaram@gmail.com', password: 'Bhairaram@123' }),
   });
   const saJson = await saRes.json();
   assert.strictEqual(saJson.success, true, 'Super admin login must succeed');
