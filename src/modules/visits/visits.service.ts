@@ -9,6 +9,7 @@ import { PrismaService } from '../../database/prisma.service.js';
 import { CreateVisitDto, UpdateVisitStatusDto } from './dto/visit.dto.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 import { VisitStatus } from '@prisma/client';
 
 @Injectable()
@@ -157,10 +158,18 @@ export class VisitsService {
       throw new BadRequestException('At least one service must be specified for visit check-in');
     }
 
-    const count = await this.prisma.visit.count({ where: { branchId } });
-    const codePrefix = branch.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
-    const year = new Date().getFullYear();
-    const visitCode = `VST-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+    for (const item of dto.services) {
+      if (!item.staffId) continue;
+      const therapist = await this.prisma.staff.findUnique({ where: { id: item.staffId } });
+      if (!therapist || therapist.deletedAt || therapist.status !== 'ACTIVE') {
+        throw new NotFoundException('Therapist not found');
+      }
+      if (therapist.branchId !== branchId) {
+        throw new BadRequestException('This therapist works at another branch.');
+      }
+    }
+
+    const visitCode = uniqueCode('VST', branch.branchCode);
 
     // Execute atomic consumption inside transaction with concurrency checks
     const result = await this.prisma.$transaction(async (tx) => {

@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 import { PaymentStatus, InvoiceStatus } from '@prisma/client';
 let PaymentsService = class PaymentsService {
     prisma;
@@ -111,10 +112,7 @@ let PaymentsService = class PaymentsService {
         const branch = customer.branch;
         const amount = Number(dto.amount);
         const currency = (dto.currency || branch.currency || 'AED').toUpperCase();
-        const count = await this.prisma.payment.count({ where: { branchId } });
-        const codePrefix = branch.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
-        const year = new Date().getFullYear();
-        const paymentCode = `PAY-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+        const paymentCode = uniqueCode('PAY', branch.branchCode);
         const result = await this.prisma.$transaction(async (tx) => {
             const payment = await tx.payment.create({
                 data: {

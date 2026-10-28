@@ -2,11 +2,13 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
 import { CreateAppointmentDto, UpdateAppointmentDto } from './dto/appointment.dto.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 import { AppointmentStatus } from '@prisma/client';
 
 @Injectable()
@@ -114,12 +116,18 @@ export class AppointmentsService {
     }
 
     const branchId = customer.branchId;
-    const branch = customer.branch;
 
-    const count = await this.prisma.appointment.count({ where: { branchId } });
-    const codePrefix = branch.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
-    const year = new Date().getFullYear();
-    const appointmentCode = `APT-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+    if (dto.staffId) {
+      const therapist = await this.prisma.staff.findUnique({ where: { id: dto.staffId } });
+      if (!therapist || therapist.deletedAt || therapist.status !== 'ACTIVE') {
+        throw new NotFoundException('Therapist not found');
+      }
+      if (therapist.branchId !== branchId) {
+        throw new BadRequestException('This therapist works at another branch.');
+      }
+    }
+
+    const appointmentCode = uniqueCode('APT', customer.branch.branchCode);
 
     const appointment = await this.prisma.appointment.create({
       data: {

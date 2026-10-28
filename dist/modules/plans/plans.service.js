@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Injectable, NotFoundException, ConflictException, ForbiddenException, BadRequestException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
+import { resolveWriteBranch } from '../../common/utils/write-branch.js';
 let PlansService = class PlansService {
     prisma;
     constructor(prisma) {
@@ -83,14 +84,8 @@ let PlansService = class PlansService {
         return plan;
     }
     async create(dto, actor) {
-        const isSuperAdmin = actor.roles.includes('SUPER_ADMIN');
-        let branchId = dto.branchId || null;
-        if (!isSuperAdmin) {
-            if (!actor.branchId) {
-                throw new ForbiddenException('Actor has no branch assigned');
-            }
-            branchId = actor.branchId;
-        }
+        const branch = await resolveWriteBranch(this.prisma, actor, dto.branchId || undefined);
+        const branchId = branch.id;
         const existing = await this.prisma.planTemplate.findUnique({
             where: { code: dto.code.toUpperCase().trim() },
         });

@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Injectable, NotFoundException, ConflictException, ForbiddenException, BadRequestException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 import { VisitStatus } from '@prisma/client';
 let VisitsService = class VisitsService {
     prisma;
@@ -129,10 +130,18 @@ let VisitsService = class VisitsService {
         if (!dto.services || dto.services.length === 0) {
             throw new BadRequestException('At least one service must be specified for visit check-in');
         }
-        const count = await this.prisma.visit.count({ where: { branchId } });
-        const codePrefix = branch.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
-        const year = new Date().getFullYear();
-        const visitCode = `VST-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+        for (const item of dto.services) {
+            if (!item.staffId)
+                continue;
+            const therapist = await this.prisma.staff.findUnique({ where: { id: item.staffId } });
+            if (!therapist || therapist.deletedAt || therapist.status !== 'ACTIVE') {
+                throw new NotFoundException('Therapist not found');
+            }
+            if (therapist.branchId !== branchId) {
+                throw new BadRequestException('This therapist works at another branch.');
+            }
+        }
+        const visitCode = uniqueCode('VST', branch.branchCode);
         const result = await this.prisma.$transaction(async (tx) => {
             const visit = await tx.visit.create({
                 data: {

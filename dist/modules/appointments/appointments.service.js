@@ -7,9 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Injectable, NotFoundException, ForbiddenException, } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 import { AppointmentStatus } from '@prisma/client';
 let AppointmentsService = class AppointmentsService {
     prisma;
@@ -92,11 +93,16 @@ let AppointmentsService = class AppointmentsService {
             throw new ForbiddenException('Cannot book appointment for customer from another branch');
         }
         const branchId = customer.branchId;
-        const branch = customer.branch;
-        const count = await this.prisma.appointment.count({ where: { branchId } });
-        const codePrefix = branch.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
-        const year = new Date().getFullYear();
-        const appointmentCode = `APT-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+        if (dto.staffId) {
+            const therapist = await this.prisma.staff.findUnique({ where: { id: dto.staffId } });
+            if (!therapist || therapist.deletedAt || therapist.status !== 'ACTIVE') {
+                throw new NotFoundException('Therapist not found');
+            }
+            if (therapist.branchId !== branchId) {
+                throw new BadRequestException('This therapist works at another branch.');
+            }
+        }
+        const appointmentCode = uniqueCode('APT', customer.branch.branchCode);
         const appointment = await this.prisma.appointment.create({
             data: {
                 appointmentCode,

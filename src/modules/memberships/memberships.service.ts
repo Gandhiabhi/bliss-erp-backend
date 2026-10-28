@@ -11,6 +11,7 @@ import {
 } from './dto/membership.dto.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 import { PaymentStatus, PaymentMethod } from '@prisma/client';
 
 @Injectable()
@@ -205,6 +206,10 @@ export class MembershipsService {
         throw new NotFoundException('Plan template not found');
       }
 
+      if (template.branchId && template.branchId !== branchId) {
+        throw new BadRequestException('This membership plan belongs to another branch.');
+      }
+
       serviceAllocations = template.services.map((s) => ({
         serviceId: s.serviceId,
         serviceVariantId: s.serviceVariantId,
@@ -221,13 +226,9 @@ export class MembershipsService {
     const finalAmount = Math.max(0, price - discount + tax);
     const currency = (dto.currency || branch.currency || 'AED').toUpperCase();
 
-    // Generate codes
-    const count = await this.prisma.membership.count({ where: { branchId } });
-    const codePrefix = branch.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
-    const year = new Date().getFullYear();
-    const membershipCode = `MEM-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
-    const invoiceNumber = `INV-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
-    const paymentCode = `PAY-${codePrefix}-${year}-${String(count + 1).padStart(4, '0')}`;
+    const membershipCode = uniqueCode('MEM', branch.branchCode);
+    const invoiceNumber = uniqueCode('INV', branch.branchCode);
+    const paymentCode = uniqueCode('PAY', branch.branchCode);
 
     const initialPaymentStatus = dto.recordPayment ? PaymentStatus.PAID : PaymentStatus.PENDING;
 
@@ -322,7 +323,7 @@ export class MembershipsService {
             transactionReference: dto.transactionReference || `TXN-${Date.now()}`,
             paymentDate: new Date(),
             status: PaymentStatus.PAID,
-            notes: 'Processed during membership enrolment.',
+            notes: dto.notes || `Paid by ${dto.paymentMethod || 'CARD'}`,
             createdById: actor.id,
           },
         });

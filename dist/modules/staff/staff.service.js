@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Injectable, NotFoundException, ForbiddenException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { resolveWriteBranch } from '../../common/utils/write-branch.js';
 let StaffService = class StaffService {
     prisma;
     constructor(prisma) {
@@ -77,22 +78,9 @@ let StaffService = class StaffService {
         return staff;
     }
     async create(dto, actor) {
-        const isSuperAdmin = actor.roles.includes('SUPER_ADMIN');
-        let branchId = dto.branchId;
-        if (!isSuperAdmin) {
-            if (!actor.branchId) {
-                throw new ForbiddenException('Actor has no branch assigned');
-            }
-            branchId = actor.branchId;
-        }
-        else if (!branchId) {
-            const firstBranch = await this.prisma.branch.findFirst({ where: { status: 'ACTIVE' } });
-            if (!firstBranch)
-                throw new NotFoundException('No active branch found');
-            branchId = firstBranch.id;
-        }
+        const branch = await resolveWriteBranch(this.prisma, actor, dto.branchId);
+        const branchId = branch.id;
         const count = await this.prisma.staff.count({ where: { branchId } });
-        const branch = await this.prisma.branch.findUnique({ where: { id: branchId } });
         const codePrefix = branch?.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
         const staffCode = dto.staffCode || `STF-${codePrefix}-${String(count + 1).padStart(3, '0')}`;
         const staff = await this.prisma.staff.create({

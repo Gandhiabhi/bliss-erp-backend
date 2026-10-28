@@ -8,6 +8,7 @@ import {
 import { PrismaService } from '../../database/prisma.service.js';
 import { CreatePlanDto, UpdatePlanDto } from './dto/plan.dto.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
+import { resolveWriteBranch } from '../../common/utils/write-branch.js';
 
 @Injectable()
 export class PlansService {
@@ -92,15 +93,8 @@ export class PlansService {
   }
 
   async create(dto: CreatePlanDto, actor: AuthenticatedUser) {
-    const isSuperAdmin = actor.roles.includes('SUPER_ADMIN');
-
-    let branchId = dto.branchId || null;
-    if (!isSuperAdmin) {
-      if (!actor.branchId) {
-        throw new ForbiddenException('Actor has no branch assigned');
-      }
-      branchId = actor.branchId;
-    }
+    const branch = await resolveWriteBranch(this.prisma, actor, dto.branchId || undefined);
+    const branchId = branch.id;
 
     const existing = await this.prisma.planTemplate.findUnique({
       where: { code: dto.code.toUpperCase().trim() },

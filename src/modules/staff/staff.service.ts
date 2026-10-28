@@ -7,6 +7,7 @@ import { PrismaService } from '../../database/prisma.service.js';
 import { CreateStaffDto, UpdateStaffDto } from './dto/staff.dto.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
 import { resolveBranchId } from '../../common/utils/branch-filter.js';
+import { resolveWriteBranch } from '../../common/utils/write-branch.js';
 
 @Injectable()
 export class StaffService {
@@ -84,23 +85,10 @@ export class StaffService {
   }
 
   async create(dto: CreateStaffDto, actor: AuthenticatedUser) {
-    const isSuperAdmin = actor.roles.includes('SUPER_ADMIN');
+    const branch = await resolveWriteBranch(this.prisma, actor, dto.branchId);
+    const branchId = branch.id;
 
-    let branchId = dto.branchId;
-    if (!isSuperAdmin) {
-      if (!actor.branchId) {
-        throw new ForbiddenException('Actor has no branch assigned');
-      }
-      branchId = actor.branchId;
-    } else if (!branchId) {
-      const firstBranch = await this.prisma.branch.findFirst({ where: { status: 'ACTIVE' } });
-      if (!firstBranch) throw new NotFoundException('No active branch found');
-      branchId = firstBranch.id;
-    }
-
-    // Generate staff code if not provided
     const count = await this.prisma.staff.count({ where: { branchId } });
-    const branch = await this.prisma.branch.findUnique({ where: { id: branchId } });
     const codePrefix = branch?.branchCode ? branch.branchCode.replace(/[^a-zA-Z0-9]/g, '') : 'BR';
     const staffCode = dto.staffCode || `STF-${codePrefix}-${String(count + 1).padStart(3, '0')}`;
 
