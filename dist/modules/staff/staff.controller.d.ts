@@ -32,15 +32,15 @@ export declare class StaffController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         staffCode: string;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
-        profileImage: string | null;
         position: string | null;
         specialization: string | null;
         joiningDate: Date | null;
-        notes: string | null;
+        profileImage: string | null;
     })[]>;
     findOne(id: string, user: AuthenticatedUser): Promise<{
         branch: {
@@ -83,15 +83,15 @@ export declare class StaffController {
                 address: string | null;
                 status: string;
                 deletedAt: Date | null;
+                notes: string | null;
                 gender: string | null;
                 dateOfBirth: Date | null;
                 emergencyContact: string | null;
                 profileImage: string | null;
-                notes: string | null;
-                customerCode: string;
                 displayName: string;
                 nationality: string | null;
                 preferredLanguage: string | null;
+                customerCode: string;
             };
             service: {
                 id: string;
@@ -102,12 +102,12 @@ export declare class StaffController {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
-                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
+                notes: string | null;
             };
         } & {
             id: string;
@@ -135,12 +135,12 @@ export declare class StaffController {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
-                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
+                notes: string | null;
             };
             visit: {
                 customer: {
@@ -157,15 +157,15 @@ export declare class StaffController {
                     address: string | null;
                     status: string;
                     deletedAt: Date | null;
+                    notes: string | null;
                     gender: string | null;
                     dateOfBirth: Date | null;
                     emergencyContact: string | null;
                     profileImage: string | null;
-                    notes: string | null;
-                    customerCode: string;
                     displayName: string;
                     nationality: string | null;
                     preferredLanguage: string | null;
+                    customerCode: string;
                 };
             } & {
                 id: string;
@@ -176,11 +176,11 @@ export declare class StaffController {
                 notes: string | null;
                 membershipId: string | null;
                 customerId: string;
-                visitCode: string;
+                createdById: string | null;
                 visitDate: Date;
+                visitCode: string;
                 checkInTime: Date;
                 checkOutTime: Date | null;
-                createdById: string | null;
             };
         } & {
             id: string;
@@ -210,15 +210,15 @@ export declare class StaffController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         staffCode: string;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
-        profileImage: string | null;
         position: string | null;
         specialization: string | null;
         joiningDate: Date | null;
-        notes: string | null;
+        profileImage: string | null;
     }>;
     create(dto: CreateStaffDto, user: AuthenticatedUser): Promise<{
         branch: {
@@ -267,15 +267,15 @@ export declare class StaffController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         staffCode: string;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
-        profileImage: string | null;
         position: string | null;
         specialization: string | null;
         joiningDate: Date | null;
-        notes: string | null;
+        profileImage: string | null;
     }>;
     update(id: string, dto: UpdateStaffDto, user: AuthenticatedUser): Promise<{
         branch: {
@@ -324,15 +324,15 @@ export declare class StaffController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         staffCode: string;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
-        profileImage: string | null;
         position: string | null;
         specialization: string | null;
         joiningDate: Date | null;
-        notes: string | null;
+        profileImage: string | null;
     }>;
     remove(id: string, user: AuthenticatedUser): Promise<{
         message: string;

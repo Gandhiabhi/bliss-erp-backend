@@ -17,12 +17,12 @@ export declare class CustomersController {
                         currency: string;
                         status: string;
                         deletedAt: Date | null;
-                        notes: string | null;
                         code: string;
                         categoryId: string | null;
                         defaultDuration: number;
                         defaultPrice: import("@prisma/client/runtime/library").Decimal;
                         image: string | null;
+                        notes: string | null;
                     };
                     serviceVariant: {
                         id: string;
@@ -53,8 +53,8 @@ export declare class CustomersController {
                 description: string | null;
                 currency: string;
                 status: import(".prisma/client").$Enums.MembershipStatus;
-                notes: string | null;
                 price: import("@prisma/client/runtime/library").Decimal;
+                notes: string | null;
                 planTemplateId: string | null;
                 customerId: string;
                 createdById: string | null;
@@ -88,12 +88,12 @@ export declare class CustomersController {
                         currency: string;
                         status: string;
                         deletedAt: Date | null;
-                        notes: string | null;
                         code: string;
                         categoryId: string | null;
                         defaultDuration: number;
                         defaultPrice: import("@prisma/client/runtime/library").Decimal;
                         image: string | null;
+                        notes: string | null;
                     };
                     serviceVariant: {
                         id: string;
@@ -124,8 +124,8 @@ export declare class CustomersController {
                 description: string | null;
                 currency: string;
                 status: import(".prisma/client").$Enums.MembershipStatus;
-                notes: string | null;
                 price: import("@prisma/client/runtime/library").Decimal;
+                notes: string | null;
                 planTemplateId: string | null;
                 customerId: string;
                 createdById: string | null;
@@ -157,15 +157,15 @@ export declare class CustomersController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
-            notes: string | null;
-            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
+            customerCode: string;
         }[];
         meta: {
             page: number;
@@ -222,8 +222,8 @@ export declare class CustomersController {
                 deletedAt: Date | null;
                 price: import("@prisma/client/runtime/library").Decimal;
                 code: string;
-                createdById: string | null;
                 durationDays: number;
+                createdById: string | null;
             } | null;
             payments: {
                 id: string;
@@ -253,12 +253,12 @@ export declare class CustomersController {
                     currency: string;
                     status: string;
                     deletedAt: Date | null;
-                    notes: string | null;
                     code: string;
                     categoryId: string | null;
                     defaultDuration: number;
                     defaultPrice: import("@prisma/client/runtime/library").Decimal;
                     image: string | null;
+                    notes: string | null;
                 };
                 serviceVariant: {
                     id: string;
@@ -289,8 +289,8 @@ export declare class CustomersController {
             description: string | null;
             currency: string;
             status: import(".prisma/client").$Enums.MembershipStatus;
-            notes: string | null;
             price: import("@prisma/client/runtime/library").Decimal;
+            notes: string | null;
             planTemplateId: string | null;
             customerId: string;
             createdById: string | null;
@@ -316,15 +316,15 @@ export declare class CustomersController {
                 address: string | null;
                 status: string;
                 deletedAt: Date | null;
+                notes: string | null;
                 staffCode: string;
                 gender: string | null;
                 dateOfBirth: Date | null;
                 emergencyContact: string | null;
-                profileImage: string | null;
                 position: string | null;
                 specialization: string | null;
                 joiningDate: Date | null;
-                notes: string | null;
+                profileImage: string | null;
             } | null;
             service: {
                 id: string;
@@ -335,12 +335,12 @@ export declare class CustomersController {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
-                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
+                notes: string | null;
             };
             serviceVariant: {
                 id: string;
@@ -383,15 +383,15 @@ export declare class CustomersController {
                     address: string | null;
                     status: string;
                     deletedAt: Date | null;
+                    notes: string | null;
                     staffCode: string;
                     gender: string | null;
                     dateOfBirth: Date | null;
                     emergencyContact: string | null;
-                    profileImage: string | null;
                     position: string | null;
                     specialization: string | null;
                     joiningDate: Date | null;
-                    notes: string | null;
+                    profileImage: string | null;
                 } | null;
                 service: {
                     id: string;
@@ -402,12 +402,12 @@ export declare class CustomersController {
                     currency: string;
                     status: string;
                     deletedAt: Date | null;
-                    notes: string | null;
                     code: string;
                     categoryId: string | null;
                     defaultDuration: number;
                     defaultPrice: import("@prisma/client/runtime/library").Decimal;
                     image: string | null;
+                    notes: string | null;
                 };
                 serviceVariant: {
                     id: string;
@@ -445,11 +445,11 @@ export declare class CustomersController {
             notes: string | null;
             membershipId: string | null;
             customerId: string;
-            visitCode: string;
+            createdById: string | null;
             visitDate: Date;
+            visitCode: string;
             checkInTime: Date;
             checkOutTime: Date | null;
-            createdById: string | null;
         })[];
         invoices: ({
             payments: {
@@ -544,15 +544,15 @@ export declare class CustomersController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
         profileImage: string | null;
-        notes: string | null;
-        customerCode: string;
         displayName: string;
         nationality: string | null;
         preferredLanguage: string | null;
+        customerCode: string;
     }>;
     create(dto: CreateCustomerDto, user: AuthenticatedUser): Promise<{
         branch: {
@@ -589,15 +589,15 @@ export declare class CustomersController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
         profileImage: string | null;
-        notes: string | null;
-        customerCode: string;
         displayName: string;
         nationality: string | null;
         preferredLanguage: string | null;
+        customerCode: string;
     }>;
     update(id: string, dto: UpdateCustomerDto, user: AuthenticatedUser): Promise<{
         branch: {
@@ -634,15 +634,15 @@ export declare class CustomersController {
         address: string | null;
         status: string;
         deletedAt: Date | null;
+        notes: string | null;
         gender: string | null;
         dateOfBirth: Date | null;
         emergencyContact: string | null;
         profileImage: string | null;
-        notes: string | null;
-        customerCode: string;
         displayName: string;
         nationality: string | null;
         preferredLanguage: string | null;
+        customerCode: string;
     }>;
     addNote(id: string, dto: AddCustomerNoteDto, user: AuthenticatedUser): Promise<{
         id: string;

@@ -14,8 +14,8 @@ export declare class AppointmentsController {
         customer: {
             id: string;
             phone: string;
-            customerCode: string;
             displayName: string;
+            customerCode: string;
         };
         staff: {
             id: string;
@@ -84,15 +84,15 @@ export declare class AppointmentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
-            notes: string | null;
-            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
+            customerCode: string;
         };
         staff: {
             email: string | null;
@@ -106,15 +106,15 @@ export declare class AppointmentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             staffCode: string;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
-            profileImage: string | null;
             position: string | null;
             specialization: string | null;
             joiningDate: Date | null;
-            notes: string | null;
+            profileImage: string | null;
         } | null;
         service: {
             id: string;
@@ -125,12 +125,12 @@ export declare class AppointmentsController {
             currency: string;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             code: string;
             categoryId: string | null;
             defaultDuration: number;
             defaultPrice: import("@prisma/client/runtime/library").Decimal;
             image: string | null;
+            notes: string | null;
         };
         serviceVariant: {
             id: string;
@@ -194,15 +194,15 @@ export declare class AppointmentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
-            notes: string | null;
-            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
+            customerCode: string;
         };
         staff: {
             email: string | null;
@@ -216,15 +216,15 @@ export declare class AppointmentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             staffCode: string;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
-            profileImage: string | null;
             position: string | null;
             specialization: string | null;
             joiningDate: Date | null;
-            notes: string | null;
+            profileImage: string | null;
         } | null;
         service: {
             id: string;
@@ -235,12 +235,12 @@ export declare class AppointmentsController {
             currency: string;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             code: string;
             categoryId: string | null;
             defaultDuration: number;
             defaultPrice: import("@prisma/client/runtime/library").Decimal;
             image: string | null;
+            notes: string | null;
         };
         serviceVariant: {
             id: string;
@@ -284,15 +284,15 @@ export declare class AppointmentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
-            notes: string | null;
-            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
+            customerCode: string;
         };
         staff: {
             email: string | null;
@@ -306,15 +306,15 @@ export declare class AppointmentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
+            notes: string | null;
             staffCode: string;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
-            profileImage: string | null;
             position: string | null;
             specialization: string | null;
             joiningDate: Date | null;
-            notes: string | null;
+            profileImage: string | null;
         } | null;
         service: {
             id: string;
@@ -325,12 +325,12 @@ export declare class AppointmentsController {
             currency: string;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             code: string;
             categoryId: string | null;
             defaultDuration: number;
             defaultPrice: import("@prisma/client/runtime/library").Decimal;
             image: string | null;
+            notes: string | null;
         };
         serviceVariant: {
             id: string;
