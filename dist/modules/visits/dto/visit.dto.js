@@ -15,6 +15,7 @@ export class RedeemServiceItemDto {
     serviceVariantId;
     membershipServiceId;
     staffId;
+    unitPrice;
     quantity;
     notes;
 }
@@ -38,6 +39,12 @@ __decorate([
     IsOptional(),
     __metadata("design:type", String)
 ], RedeemServiceItemDto.prototype, "staffId", void 0);
+__decorate([
+    IsNumber(),
+    Min(0),
+    IsOptional(),
+    __metadata("design:type", Number)
+], RedeemServiceItemDto.prototype, "unitPrice", void 0);
 __decorate([
     IsNumber(),
     Min(1),

@@ -4,6 +4,7 @@ export declare class RedeemServiceItemDto {
     serviceVariantId?: string;
     membershipServiceId?: string;
     staffId?: string;
+    unitPrice?: number;
     quantity: number;
     notes?: string;
 }

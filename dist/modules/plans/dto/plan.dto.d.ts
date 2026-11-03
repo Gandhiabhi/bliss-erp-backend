@@ -8,7 +8,8 @@ export declare class CreatePlanDto {
     name: string;
     branchId?: string;
     description?: string;
-    durationDays: number;
+    isLifetime?: boolean;
+    durationDays?: number;
     price: number;
     currency?: string;
     services: PlanServiceItemDto[];
@@ -16,6 +17,7 @@ export declare class CreatePlanDto {
 export declare class UpdatePlanDto {
     name?: string;
     description?: string;
+    isLifetime?: boolean;
     durationDays?: number;
     price?: number;
     currency?: string;

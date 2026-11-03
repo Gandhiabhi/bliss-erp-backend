@@ -11,10 +11,14 @@ describe('VisitsService - Entitlement & Concurrency Protection', () => {
       customer: {
         findUnique: vi.fn(),
       },
-      membership: {
-        findUnique: vi.fn(),
-      },
       membershipService: {
+        findUnique: vi.fn(),
+        findMany: vi.fn().mockResolvedValue([
+          { allocatedQuantity: 5, consumedQuantity: 3 },
+        ]),
+        update: vi.fn(),
+      },
+      membership: {
         findUnique: vi.fn(),
         update: vi.fn(),
       },

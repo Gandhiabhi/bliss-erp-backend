@@ -60,9 +60,13 @@ export class CreateMembershipDto {
   @IsNotEmpty()
   startDate!: string;
 
+  @IsBoolean()
+  @IsOptional()
+  isLifetime?: boolean;
+
   @IsDateString()
-  @IsNotEmpty()
-  endDate!: string;
+  @IsOptional()
+  endDate?: string;
 
   @IsNumber()
   @Min(0)

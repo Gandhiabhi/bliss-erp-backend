@@ -95,13 +95,18 @@ let PlansService = class PlansService {
         if (!dto.services || dto.services.length === 0) {
             throw new BadRequestException('At least one service must be added to the plan');
         }
+        const isLifetime = Boolean(dto.isLifetime);
+        if (!isLifetime && (!dto.durationDays || dto.durationDays < 1)) {
+            throw new BadRequestException('Enter the number of days this plan stays valid, or mark it as lifetime');
+        }
         const plan = await this.prisma.planTemplate.create({
             data: {
                 code: dto.code.toUpperCase().trim(),
                 name: dto.name,
                 branchId,
                 description: dto.description,
-                durationDays: dto.durationDays,
+                isLifetime,
+                durationDays: isLifetime ? 0 : Number(dto.durationDays),
                 price: dto.price,
                 currency: (dto.currency || 'AED').toUpperCase(),
                 status: 'ACTIVE',
@@ -162,12 +167,21 @@ let PlansService = class PlansService {
                 }),
             ]);
         }
+        const isLifetime = dto.isLifetime !== undefined ? Boolean(dto.isLifetime) : undefined;
+        if (isLifetime === false && dto.durationDays !== undefined && dto.durationDays < 1) {
+            throw new BadRequestException('Enter the number of days this plan stays valid, or mark it as lifetime');
+        }
         const updated = await this.prisma.planTemplate.update({
             where: { id },
             data: {
                 name: dto.name !== undefined ? dto.name : undefined,
                 description: dto.description !== undefined ? dto.description : undefined,
-                durationDays: dto.durationDays !== undefined ? dto.durationDays : undefined,
+                isLifetime,
+                durationDays: isLifetime === true
+                    ? 0
+                    : dto.durationDays !== undefined
+                        ? dto.durationDays
+                        : undefined,
                 price: dto.price !== undefined ? dto.price : undefined,
                 currency: dto.currency ? dto.currency.toUpperCase() : undefined,
                 status: dto.status !== undefined ? dto.status : undefined,

@@ -30,6 +30,11 @@ export class RedeemServiceItemDto {
   staffId?: string; // Therapist performing service
 
   @IsNumber()
+  @Min(0)
+  @IsOptional()
+  unitPrice?: number;
+
+  @IsNumber()
   @Min(1)
   quantity!: number;
 
