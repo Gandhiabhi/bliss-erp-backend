@@ -28,12 +28,12 @@ export declare class PlansService {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
+                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
-                notes: string | null;
             };
             serviceVariant: {
                 id: string;
@@ -65,8 +65,9 @@ export declare class PlansService {
         deletedAt: Date | null;
         price: import("@prisma/client/runtime/library").Decimal;
         code: string;
-        durationDays: number;
         createdById: string | null;
+        isLifetime: boolean;
+        durationDays: number;
     })[]>;
     findOne(id: string, user: AuthenticatedUser): Promise<{
         branch: {
@@ -102,12 +103,12 @@ export declare class PlansService {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
+                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
-                notes: string | null;
             };
             serviceVariant: {
                 id: string;
@@ -139,8 +140,9 @@ export declare class PlansService {
         deletedAt: Date | null;
         price: import("@prisma/client/runtime/library").Decimal;
         code: string;
-        durationDays: number;
         createdById: string | null;
+        isLifetime: boolean;
+        durationDays: number;
     }>;
     create(dto: CreatePlanDto, actor: AuthenticatedUser): Promise<{
         branch: {
@@ -173,12 +175,12 @@ export declare class PlansService {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
+                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
-                notes: string | null;
             };
             serviceVariant: {
                 id: string;
@@ -210,8 +212,9 @@ export declare class PlansService {
         deletedAt: Date | null;
         price: import("@prisma/client/runtime/library").Decimal;
         code: string;
-        durationDays: number;
         createdById: string | null;
+        isLifetime: boolean;
+        durationDays: number;
     }>;
     update(id: string, dto: UpdatePlanDto, actor: AuthenticatedUser): Promise<{
         branch: {
@@ -244,12 +247,12 @@ export declare class PlansService {
                 currency: string;
                 status: string;
                 deletedAt: Date | null;
+                notes: string | null;
                 code: string;
                 categoryId: string | null;
                 defaultDuration: number;
                 defaultPrice: import("@prisma/client/runtime/library").Decimal;
                 image: string | null;
-                notes: string | null;
             };
             serviceVariant: {
                 id: string;
@@ -281,8 +284,9 @@ export declare class PlansService {
         deletedAt: Date | null;
         price: import("@prisma/client/runtime/library").Decimal;
         code: string;
-        durationDays: number;
         createdById: string | null;
+        isLifetime: boolean;
+        durationDays: number;
     }>;
     remove(id: string, actor: AuthenticatedUser): Promise<{
         message: string;

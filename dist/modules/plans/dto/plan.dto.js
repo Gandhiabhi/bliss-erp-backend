@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsNotEmpty, IsOptional, IsString, IsNumber, Min, IsArray, ValidateNested, } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, Min, IsArray, IsBoolean, ValidateNested, } from 'class-validator';
 import { Type } from 'class-transformer';
 export class PlanServiceItemDto {
     serviceId;
@@ -34,6 +34,7 @@ export class CreatePlanDto {
     name;
     branchId;
     description;
+    isLifetime;
     durationDays;
     price;
     currency;
@@ -60,8 +61,14 @@ __decorate([
     __metadata("design:type", String)
 ], CreatePlanDto.prototype, "description", void 0);
 __decorate([
+    IsBoolean(),
+    IsOptional(),
+    __metadata("design:type", Boolean)
+], CreatePlanDto.prototype, "isLifetime", void 0);
+__decorate([
     IsNumber(),
-    Min(1),
+    Min(0),
+    IsOptional(),
     __metadata("design:type", Number)
 ], CreatePlanDto.prototype, "durationDays", void 0);
 __decorate([
@@ -83,6 +90,7 @@ __decorate([
 export class UpdatePlanDto {
     name;
     description;
+    isLifetime;
     durationDays;
     price;
     currency;
@@ -100,8 +108,13 @@ __decorate([
     __metadata("design:type", String)
 ], UpdatePlanDto.prototype, "description", void 0);
 __decorate([
+    IsBoolean(),
+    IsOptional(),
+    __metadata("design:type", Boolean)
+], UpdatePlanDto.prototype, "isLifetime", void 0);
+__decorate([
     IsNumber(),
-    Min(1),
+    Min(0),
     IsOptional(),
     __metadata("design:type", Number)
 ], UpdatePlanDto.prototype, "durationDays", void 0);

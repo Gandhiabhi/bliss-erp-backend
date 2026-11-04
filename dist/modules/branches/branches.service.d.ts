@@ -47,15 +47,15 @@ export declare class BranchesService {
             address: string | null;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             staffCode: string;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
+            profileImage: string | null;
             position: string | null;
             specialization: string | null;
             joiningDate: Date | null;
-            profileImage: string | null;
+            notes: string | null;
         }[];
         users: {
             email: string;

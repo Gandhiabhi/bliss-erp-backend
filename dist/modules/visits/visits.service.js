@@ -170,7 +170,10 @@ let VisitsService = class VisitsService {
                         where: { id: item.serviceVariantId },
                     });
                 }
-                const unitPriceSnapshot = variant ? Number(variant.price) : Number(service.defaultPrice);
+                const catalogPrice = variant ? Number(variant.price) : Number(service.defaultPrice);
+                const unitPriceSnapshot = item.unitPrice !== undefined && item.unitPrice !== null
+                    ? Number(item.unitPrice)
+                    : catalogPrice;
                 const currencySnapshot = variant?.currency || service.currency || branch.currency;
                 const serviceNameSnapshot = service.name;
                 const variantNameSnapshot = variant?.name || null;
@@ -197,7 +200,10 @@ let VisitsService = class VisitsService {
                     if (memService.membership.status !== 'ACTIVE') {
                         throw new ConflictException(`Membership ${memService.membership.membershipCode} is not active (Status: ${memService.membership.status})`);
                     }
-                    if (new Date(memService.membership.endDate) < new Date()) {
+                    const expiredByDate = !memService.membership.isLifetime &&
+                        memService.membership.endDate &&
+                        new Date(memService.membership.endDate) < new Date();
+                    if (expiredByDate) {
                         throw new ConflictException('Membership has expired');
                     }
                     const remaining = memService.allocatedQuantity - memService.consumedQuantity;
@@ -233,6 +239,29 @@ let VisitsService = class VisitsService {
                     },
                 });
                 createdVisitServices.push(vs);
+            }
+            const membershipIds = new Set();
+            if (dto.membershipId)
+                membershipIds.add(dto.membershipId);
+            for (const line of createdVisitServices) {
+                if (line.membershipServiceId) {
+                    const owned = await tx.membershipService.findUnique({
+                        where: { id: line.membershipServiceId },
+                        select: { membershipId: true },
+                    });
+                    if (owned)
+                        membershipIds.add(owned.membershipId);
+                }
+            }
+            for (const membershipId of membershipIds) {
+                const lines = await tx.membershipService.findMany({ where: { membershipId } });
+                const finished = lines.length > 0 && lines.every((line) => line.consumedQuantity >= line.allocatedQuantity);
+                if (finished) {
+                    await tx.membership.update({
+                        where: { id: membershipId },
+                        data: { status: 'COMPLETED' },
+                    });
+                }
             }
             await tx.auditLog.create({
                 data: {

@@ -150,6 +150,20 @@ let MembershipsService = class MembershipsService {
         }
         const branchId = customer.branchId;
         const branch = customer.branch;
+        let template = null;
+        if (dto.planTemplateId) {
+            const found = await this.prisma.planTemplate.findUnique({
+                where: { id: dto.planTemplateId },
+                include: { services: true },
+            });
+            if (!found || found.deletedAt) {
+                throw new NotFoundException('Plan template not found');
+            }
+            if (found.branchId && found.branchId !== branchId) {
+                throw new BadRequestException('This membership plan belongs to another branch.');
+            }
+            template = found;
+        }
         let serviceAllocations = [];
         if (dto.services && dto.services.length > 0) {
             serviceAllocations = dto.services.map((s) => ({
@@ -159,17 +173,7 @@ let MembershipsService = class MembershipsService {
                 notes: s.notes,
             }));
         }
-        else if (dto.planTemplateId) {
-            const template = await this.prisma.planTemplate.findUnique({
-                where: { id: dto.planTemplateId },
-                include: { services: true },
-            });
-            if (!template || template.deletedAt) {
-                throw new NotFoundException('Plan template not found');
-            }
-            if (template.branchId && template.branchId !== branchId) {
-                throw new BadRequestException('This membership plan belongs to another branch.');
-            }
+        else if (template) {
             serviceAllocations = template.services.map((s) => ({
                 serviceId: s.serviceId,
                 serviceVariantId: s.serviceVariantId,
@@ -178,6 +182,10 @@ let MembershipsService = class MembershipsService {
         }
         else {
             throw new BadRequestException('Membership must include service allocations or a valid plan template');
+        }
+        const isLifetime = Boolean(dto.isLifetime) || Boolean(template?.isLifetime);
+        if (!isLifetime && !dto.endDate) {
+            throw new BadRequestException('An end date is required unless this plan is lifetime');
         }
         const price = Number(dto.price);
         const discount = Number(dto.discount || 0);
@@ -199,7 +207,8 @@ let MembershipsService = class MembershipsService {
                     name: dto.name,
                     description: dto.description,
                     startDate: new Date(dto.startDate),
-                    endDate: new Date(dto.endDate),
+                    endDate: isLifetime ? null : new Date(dto.endDate),
+                    isLifetime,
                     price,
                     currency,
                     discount,

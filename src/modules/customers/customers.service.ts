@@ -201,13 +201,16 @@ export class CustomersService {
       remaining: number;
       percentageUsed: number;
       isExpired: boolean;
-      expiresAt: Date;
+      isLifetime: boolean;
+      expiresAt: Date | null;
     }> = [];
 
     const now = new Date();
 
     for (const mem of activeMemberships) {
-      const isExpired = new Date(mem.endDate) < now;
+      const isExpired =
+        mem.status !== 'ACTIVE' ||
+        (!mem.isLifetime && !!mem.endDate && new Date(mem.endDate) < now);
       for (const ms of mem.services) {
         const remaining = Math.max(0, ms.allocatedQuantity - ms.consumedQuantity);
         const percentageUsed = ms.allocatedQuantity > 0
@@ -226,7 +229,8 @@ export class CustomersService {
           remaining,
           percentageUsed,
           isExpired,
-          expiresAt: mem.endDate,
+          isLifetime: mem.isLifetime,
+          expiresAt: mem.isLifetime ? null : mem.endDate,
         });
       }
     }

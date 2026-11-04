@@ -13,7 +13,8 @@ export declare class CreateMembershipDto {
     name: string;
     description?: string;
     startDate: string;
-    endDate: string;
+    isLifetime?: boolean;
+    endDate?: string;
     price: number;
     currency?: string;
     discount?: number;

@@ -15,8 +15,8 @@ export declare class PaymentsController {
             customer: {
                 id: string;
                 phone: string;
-                displayName: string;
                 customerCode: string;
+                displayName: string;
             };
             membership: {
                 id: string;
@@ -94,15 +94,15 @@ export declare class PaymentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
+            notes: string | null;
+            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
-            customerCode: string;
         };
         membership: {
             id: string;
@@ -113,15 +113,16 @@ export declare class PaymentsController {
             description: string | null;
             currency: string;
             status: import(".prisma/client").$Enums.MembershipStatus;
-            price: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
+            price: import("@prisma/client/runtime/library").Decimal;
             planTemplateId: string | null;
             customerId: string;
             createdById: string | null;
+            isLifetime: boolean;
             membershipCode: string;
             isCustomPlan: boolean;
             startDate: Date;
-            endDate: Date;
+            endDate: Date | null;
             discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
             finalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -240,8 +241,8 @@ export declare class PaymentsController {
             customer: {
                 id: string;
                 phone: string;
-                displayName: string;
                 customerCode: string;
+                displayName: string;
             };
             membership: {
                 id: string;
@@ -330,15 +331,15 @@ export declare class PaymentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
+            notes: string | null;
+            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
-            customerCode: string;
         };
         membership: {
             id: string;
@@ -349,15 +350,16 @@ export declare class PaymentsController {
             description: string | null;
             currency: string;
             status: import(".prisma/client").$Enums.MembershipStatus;
-            price: import("@prisma/client/runtime/library").Decimal;
             notes: string | null;
+            price: import("@prisma/client/runtime/library").Decimal;
             planTemplateId: string | null;
             customerId: string;
             createdById: string | null;
+            isLifetime: boolean;
             membershipCode: string;
             isCustomPlan: boolean;
             startDate: Date;
-            endDate: Date;
+            endDate: Date | null;
             discount: import("@prisma/client/runtime/library").Decimal;
             tax: import("@prisma/client/runtime/library").Decimal;
             finalAmount: import("@prisma/client/runtime/library").Decimal;
@@ -449,15 +451,15 @@ export declare class PaymentsController {
             address: string | null;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             gender: string | null;
             dateOfBirth: Date | null;
             emergencyContact: string | null;
             profileImage: string | null;
+            notes: string | null;
+            customerCode: string;
             displayName: string;
             nationality: string | null;
             preferredLanguage: string | null;
-            customerCode: string;
         };
         items: {
             id: string;

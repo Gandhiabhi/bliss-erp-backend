@@ -44,6 +44,7 @@ export class CreateMembershipDto {
     name;
     description;
     startDate;
+    isLifetime;
     endDate;
     price;
     currency;
@@ -91,8 +92,13 @@ __decorate([
     __metadata("design:type", String)
 ], CreateMembershipDto.prototype, "startDate", void 0);
 __decorate([
+    IsBoolean(),
+    IsOptional(),
+    __metadata("design:type", Boolean)
+], CreateMembershipDto.prototype, "isLifetime", void 0);
+__decorate([
     IsDateString(),
-    IsNotEmpty(),
+    IsOptional(),
     __metadata("design:type", String)
 ], CreateMembershipDto.prototype, "endDate", void 0);
 __decorate([

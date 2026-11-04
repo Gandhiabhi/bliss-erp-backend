@@ -5,6 +5,7 @@ import {
   IsNumber,
   Min,
   IsArray,
+  IsBoolean,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -40,9 +41,14 @@ export class CreatePlanDto {
   @IsOptional()
   description?: string;
 
+  @IsBoolean()
+  @IsOptional()
+  isLifetime?: boolean;
+
   @IsNumber()
-  @Min(1)
-  durationDays!: number;
+  @Min(0)
+  @IsOptional()
+  durationDays?: number;
 
   @IsNumber()
   @Min(0)
@@ -67,8 +73,12 @@ export class UpdatePlanDto {
   @IsOptional()
   description?: string;
 
+  @IsBoolean()
+  @IsOptional()
+  isLifetime?: boolean;
+
   @IsNumber()
-  @Min(1)
+  @Min(0)
   @IsOptional()
   durationDays?: number;
 
