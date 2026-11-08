@@ -10,22 +10,22 @@ export declare class AuthService {
         accessToken: string;
         refreshToken: string;
         user: {
-            id: string;
-            email: string;
-            firstName: string;
-            lastName: string;
-            phone: string | null;
-            branchId: string | null;
+            id: any;
+            email: any;
+            firstName: any;
+            lastName: any;
+            phone: any;
+            branchId: any;
             branch: {
-                id: string;
-                branchCode: string;
-                name: string;
-                currency: string;
-                timezone: string;
-                country: string;
-                city: string;
+                id: any;
+                branchCode: any;
+                name: any;
+                currency: any;
+                timezone: any;
+                country: any;
+                city: any;
             } | null;
-            roles: string[];
+            roles: any;
             permissions: string[];
         };
     }>;
@@ -37,33 +37,14 @@ export declare class AuthService {
         message: string;
     }>;
     getProfile(userId: string): Promise<{
-        id: string;
-        email: string;
-        firstName: string;
-        lastName: string;
-        phone: string | null;
-        branchId: string | null;
-        branch: {
-            email: string | null;
-            id: string;
-            phone: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            name: string;
-            branchCode: string;
-            country: string;
-            state: string | null;
-            city: string;
-            address: string | null;
-            timezone: string;
-            currency: string;
-            logo: string | null;
-            openingTime: string | null;
-            closingTime: string | null;
-            status: import(".prisma/client").$Enums.BranchStatus;
-            deletedAt: Date | null;
-        } | null;
-        roles: string[];
+        id: any;
+        email: any;
+        firstName: any;
+        lastName: any;
+        phone: any;
+        branchId: any;
+        branch: any;
+        roles: any;
         permissions: string[];
     }>;
     logout(userId: string): Promise<{

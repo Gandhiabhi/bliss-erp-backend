@@ -4,34 +4,11 @@ export declare class AuditLogsController {
     private readonly auditLogsService;
     constructor(auditLogsService: AuditLogsService);
     findAll(user: AuthenticatedUser, branchId?: string, action?: string, entityType?: string, search?: string, page?: number, limit?: number): Promise<{
-        data: ({
-            branch: {
-                id: string;
-                name: string;
-                branchCode: string;
-            } | null;
-            actor: {
-                email: string;
-                id: string;
-            } | null;
-        } & {
-            id: string;
-            branchId: string | null;
-            createdAt: Date;
-            actorName: string;
-            action: string;
-            entityType: string;
-            entityId: string;
-            beforeData: import("@prisma/client/runtime/library").JsonValue | null;
-            afterData: import("@prisma/client/runtime/library").JsonValue | null;
-            ipAddress: string | null;
-            userAgent: string | null;
-            actorId: string | null;
-        })[];
+        data: any;
         meta: {
             page: number;
             limit: number;
-            total: number;
+            total: any;
             totalPages: number;
         };
     }>;

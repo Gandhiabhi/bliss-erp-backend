@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b;
 import { IsNotEmpty, IsOptional, IsString, IsNumber, Min, IsBoolean, IsArray, ValidateNested, IsDateString, IsEnum, } from 'class-validator';
 import { Type } from 'class-transformer';
 import { MembershipStatus, PaymentMethod } from '@prisma/client';
@@ -143,7 +144,7 @@ __decorate([
 __decorate([
     IsEnum(PaymentMethod),
     IsOptional(),
-    __metadata("design:type", String)
+    __metadata("design:type", typeof (_a = typeof PaymentMethod !== "undefined" && PaymentMethod) === "function" ? _a : Object)
 ], CreateMembershipDto.prototype, "paymentMethod", void 0);
 __decorate([
     IsString(),
@@ -157,7 +158,7 @@ export class UpdateMembershipStatusDto {
 __decorate([
     IsEnum(MembershipStatus),
     IsNotEmpty(),
-    __metadata("design:type", String)
+    __metadata("design:type", typeof (_b = typeof MembershipStatus !== "undefined" && MembershipStatus) === "function" ? _b : Object)
 ], UpdateMembershipStatusDto.prototype, "status", void 0);
 __decorate([
     IsString(),

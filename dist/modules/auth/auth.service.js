@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Injectable, UnauthorizedException, BadRequestException, NotFoundException, } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
+import { requiredEnv } from '../../load-env.js';
 import { PrismaService } from '../../database/prisma.service.js';
 let AuthService = class AuthService {
     prisma;
@@ -60,11 +61,11 @@ let AuthService = class AuthService {
         const permissions = Array.from(permissionSet);
         const payload = { sub: user.id, email: user.email };
         const accessToken = this.jwtService.sign(payload, {
-            secret: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
+            secret: requiredEnv('JWT_SECRET'),
             expiresIn: (process.env.JWT_EXPIRES_IN || '1d'),
         });
         const refreshToken = this.jwtService.sign(payload, {
-            secret: process.env.JWT_REFRESH_SECRET || 'blish-super-secure-refresh-jwt-secret-key-2026-production',
+            secret: requiredEnv('JWT_REFRESH_SECRET'),
             expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d'),
         });
         const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
@@ -116,7 +117,7 @@ let AuthService = class AuthService {
     async refreshToken(rawRefreshToken) {
         try {
             const payload = this.jwtService.verify(rawRefreshToken, {
-                secret: process.env.JWT_REFRESH_SECRET || 'blish-super-secure-refresh-jwt-secret-key-2026-production',
+                secret: requiredEnv('JWT_REFRESH_SECRET'),
             });
             const user = await this.prisma.user.findUnique({
                 where: { id: payload.sub },
@@ -130,11 +131,11 @@ let AuthService = class AuthService {
             }
             const newPayload = { sub: user.id, email: user.email };
             const newAccessToken = this.jwtService.sign(newPayload, {
-                secret: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
+                secret: requiredEnv('JWT_SECRET'),
                 expiresIn: (process.env.JWT_EXPIRES_IN || '1d'),
             });
             const newRefreshToken = this.jwtService.sign(newPayload, {
-                secret: process.env.JWT_REFRESH_SECRET || 'blish-super-secure-refresh-jwt-secret-key-2026-production',
+                secret: requiredEnv('JWT_REFRESH_SECRET'),
                 expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d'),
             });
             const newRefreshTokenHash = await bcrypt.hash(newRefreshToken, 10);

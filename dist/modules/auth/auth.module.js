@@ -4,12 +4,14 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+import '../../load-env.js';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service.js';
 import { AuthController } from './auth.controller.js';
 import { JwtStrategy } from './jwt.strategy.js';
+import { requiredEnv } from '../../load-env.js';
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -17,8 +19,8 @@ AuthModule = __decorate([
         imports: [
             PassportModule.register({ defaultStrategy: 'jwt' }),
             JwtModule.register({
-                secret: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
-                signOptions: { expiresIn: '1d' },
+                secret: requiredEnv('JWT_SECRET'),
+                signOptions: { expiresIn: (process.env.JWT_EXPIRES_IN || '1d') },
             }),
         ],
         controllers: [AuthController],

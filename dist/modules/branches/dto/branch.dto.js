@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b;
 import { IsEnum, IsNotEmpty, IsOptional, IsString, IsEmail, } from 'class-validator';
 import { BranchStatus } from '@prisma/client';
 export class CreateBranchDto {
@@ -87,7 +88,7 @@ __decorate([
 __decorate([
     IsEnum(BranchStatus),
     IsOptional(),
-    __metadata("design:type", String)
+    __metadata("design:type", typeof (_a = typeof BranchStatus !== "undefined" && BranchStatus) === "function" ? _a : Object)
 ], CreateBranchDto.prototype, "status", void 0);
 export class UpdateBranchDto {
     name;
@@ -161,6 +162,6 @@ __decorate([
 __decorate([
     IsEnum(BranchStatus),
     IsOptional(),
-    __metadata("design:type", String)
+    __metadata("design:type", typeof (_b = typeof BranchStatus !== "undefined" && BranchStatus) === "function" ? _b : Object)
 ], UpdateBranchDto.prototype, "status", void 0);
 //# sourceMappingURL=branch.dto.js.map

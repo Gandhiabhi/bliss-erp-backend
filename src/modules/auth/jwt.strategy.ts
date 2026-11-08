@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
+import { requiredEnv } from '../../load-env.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
 
@@ -23,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
+      secretOrKey: requiredEnv('JWT_SECRET'),
     });
   }
 
