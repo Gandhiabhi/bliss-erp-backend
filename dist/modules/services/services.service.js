@@ -9,6 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Injectable, NotFoundException, ConflictException, ForbiddenException, } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 let ServicesService = class ServicesService {
     prisma;
     constructor(prisma) {
@@ -127,15 +128,22 @@ let ServicesService = class ServicesService {
         };
     }
     async create(dto, actor) {
-        const existing = await this.prisma.service.findUnique({
-            where: { code: dto.code.toUpperCase().trim() },
-        });
-        if (existing) {
-            throw new ConflictException(`Service code '${dto.code}' already exists`);
+        const requested = dto.code?.trim();
+        let code = requested ? requested.toUpperCase() : uniqueCode('SVC', dto.name);
+        if (requested) {
+            const existing = await this.prisma.service.findUnique({ where: { code } });
+            if (existing) {
+                throw new ConflictException(`Service code '${code}' already exists`);
+            }
+        }
+        else {
+            const taken = await this.prisma.service.findUnique({ where: { code } });
+            if (taken)
+                code = uniqueCode('SVC', dto.name);
         }
         const service = await this.prisma.service.create({
             data: {
-                code: dto.code.toUpperCase().trim(),
+                code,
                 name: dto.name,
                 categoryId: dto.categoryId || null,
                 description: dto.description,

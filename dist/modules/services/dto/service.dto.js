@@ -83,7 +83,7 @@ export class CreateServiceDto {
 }
 __decorate([
     IsString(),
-    IsNotEmpty(),
+    IsOptional(),
     __metadata("design:type", String)
 ], CreateServiceDto.prototype, "code", void 0);
 __decorate([

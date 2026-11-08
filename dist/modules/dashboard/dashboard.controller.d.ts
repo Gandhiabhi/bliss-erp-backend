@@ -55,11 +55,11 @@ export declare class DashboardController {
             notes: string | null;
             membershipId: string | null;
             customerId: string;
-            visitCode: string;
+            createdById: string | null;
             visitDate: Date;
+            visitCode: string;
             checkInTime: Date;
             checkOutTime: Date | null;
-            createdById: string | null;
         })[];
         upcomingAppointments: ({
             customer: {

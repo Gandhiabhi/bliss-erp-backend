@@ -71,12 +71,12 @@ export declare class ServicesService {
         currency: string;
         status: string;
         deletedAt: Date | null;
-        notes: string | null;
         code: string;
         categoryId: string | null;
         defaultDuration: number;
         defaultPrice: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
+        notes: string | null;
     }[]>;
     findOne(id: string, user: AuthenticatedUser, requestedBranchId?: string): Promise<{
         effectivePrice: number;
@@ -170,12 +170,12 @@ export declare class ServicesService {
         currency: string;
         status: string;
         deletedAt: Date | null;
-        notes: string | null;
         code: string;
         categoryId: string | null;
         defaultDuration: number;
         defaultPrice: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
+        notes: string | null;
     }>;
     create(dto: CreateServiceDto, actor: AuthenticatedUser): Promise<{
         variants: {
@@ -207,12 +207,12 @@ export declare class ServicesService {
         currency: string;
         status: string;
         deletedAt: Date | null;
-        notes: string | null;
         code: string;
         categoryId: string | null;
         defaultDuration: number;
         defaultPrice: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
+        notes: string | null;
     }>;
     update(id: string, dto: UpdateServiceDto, actor: AuthenticatedUser): Promise<{
         variants: {
@@ -244,12 +244,12 @@ export declare class ServicesService {
         currency: string;
         status: string;
         deletedAt: Date | null;
-        notes: string | null;
         code: string;
         categoryId: string | null;
         defaultDuration: number;
         defaultPrice: import("@prisma/client/runtime/library").Decimal;
         image: string | null;
+        notes: string | null;
     }>;
     addVariant(serviceId: string, dto: CreateVariantDto, actor: AuthenticatedUser): Promise<{
         id: string;
@@ -306,12 +306,12 @@ export declare class ServicesService {
             currency: string;
             status: string;
             deletedAt: Date | null;
-            notes: string | null;
             code: string;
             categoryId: string | null;
             defaultDuration: number;
             defaultPrice: import("@prisma/client/runtime/library").Decimal;
             image: string | null;
+            notes: string | null;
         };
     } & {
         id: string;

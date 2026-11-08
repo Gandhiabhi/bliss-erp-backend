@@ -53,8 +53,8 @@ export class UpdateVariantDto {
 
 export class CreateServiceDto {
   @IsString()
-  @IsNotEmpty()
-  code!: string;
+  @IsOptional()
+  code?: string;
 
   @IsString()
   @IsNotEmpty()
