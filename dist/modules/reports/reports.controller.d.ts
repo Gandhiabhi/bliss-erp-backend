@@ -5,72 +5,51 @@ export declare class ReportsController {
     constructor(reportsService: ReportsService);
     getDailyReport(user: AuthenticatedUser, date?: string, branchId?: string): Promise<{
         date: string;
-        totalVisits: number;
-        newCustomers: number;
-        totalRevenue: number;
-        totalPaymentsCount: number;
-        membershipsSoldCount: number;
-        totalServicesConsumed: number;
+        totalVisits: any;
+        newCustomers: any;
+        totalRevenue: any;
+        totalPaymentsCount: any;
+        membershipsSoldCount: any;
+        totalServicesConsumed: any;
         servicesBreakdown: {
             name: string;
             count: number;
         }[];
-        paymentsList: {
-            id: string;
-            code: string;
-            amount: number;
-            currency: string;
-            method: import(".prisma/client").$Enums.PaymentMethod;
-            date: Date;
-        }[];
+        paymentsList: any;
     }>;
     getMonthlyReport(user: AuthenticatedUser, year?: number, month?: number, branchId?: string): Promise<{
         year: number;
         month: number;
-        totalVisits: number;
-        totalCustomers: number;
-        newCustomers: number;
+        totalVisits: any;
+        totalCustomers: any;
+        newCustomers: any;
         returningCustomers: number;
-        totalRevenue: number;
-        membershipsSold: number;
-        servicesConsumed: number;
+        totalRevenue: any;
+        membershipsSold: any;
+        servicesConsumed: any;
         dailyBreakdown: {
             day: number;
             date: string;
-            visits: number;
-            revenue: number;
+            visits: any;
+            revenue: any;
         }[];
     }>;
     getYearlyReport(user: AuthenticatedUser, year?: number, branchId?: string): Promise<{
         year: number;
-        totalRevenue: number;
-        totalVisits: number;
-        totalMembershipsSold: number;
-        totalNewCustomers: number;
+        totalRevenue: any;
+        totalVisits: any;
+        totalMembershipsSold: any;
+        totalNewCustomers: any;
         monthlyBreakdown: {
             month: string;
             monthIndex: number;
-            revenue: number;
-            visits: number;
-            memberships: number;
-            newCustomers: number;
+            revenue: any;
+            visits: any;
+            memberships: any;
+            newCustomers: any;
         }[];
     }>;
-    getBranchComparisonReport(user: AuthenticatedUser): Promise<{
-        branchId: string;
-        branchCode: string;
-        branchName: string;
-        country: string;
-        city: string;
-        currency: string;
-        timezone: string;
-        status: import(".prisma/client").$Enums.BranchStatus;
-        totalCustomers: number;
-        totalStaff: number;
-        totalVisits: number;
-        totalMemberships: number;
-        totalRevenue: number;
-    }[]>;
+    getBranchComparisonReport(user: AuthenticatedUser): Promise<any>;
     getServiceUsageReport(user: AuthenticatedUser, branchId?: string): Promise<{
         totalServicesDelivered: number;
         totalDeliveredValue: number;
@@ -82,18 +61,18 @@ export declare class ReportsController {
         }[];
     }>;
     getMembershipReport(user: AuthenticatedUser, branchId?: string): Promise<{
-        totalMemberships: number;
-        totalValue: number;
+        totalMemberships: any;
+        totalValue: any;
         statusBreakdown: {
-            active: number;
-            paused: number;
-            expired: number;
-            cancelled: number;
-            completed: number;
+            active: any;
+            paused: any;
+            expired: any;
+            cancelled: any;
+            completed: any;
         };
         planTypes: {
             standardTemplate: number;
-            customClientPlan: number;
+            customClientPlan: any;
         };
     }>;
 }

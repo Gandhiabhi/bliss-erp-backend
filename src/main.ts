@@ -1,9 +1,11 @@
+import './load-env.js';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module.js';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import path from 'path';
+import { corsOrigins, requiredEnv } from './load-env.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,16 +14,16 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   // Cookie parser for secure session cookies
-  app.use(cookieParser(process.env.COOKIE_SECRET || 'blish-secure-cookie-secret-signature-2026'));
+  app.use(cookieParser(requiredEnv('COOKIE_SECRET')));
 
-  // CORS configuration
-  const origin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+  const origins = corsOrigins();
   app.enableCors({
-    origin: [origin, 'http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: origins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   });
+  console.log(`CORS allows: ${origins.join(', ')}`);
 
   // Strict validation pipe with mass assignment protection (whitelisting)
   app.useGlobalPipes(
@@ -39,9 +41,13 @@ async function bootstrap() {
   const uploadsDir = path.resolve(process.cwd(), 'uploads');
   app.use('/uploads', express.static(uploadsDir));
 
-  const port = process.env.PORT || 4000;
-  await app.listen(port);
-  console.log(`🚀 Blish Spa ERP API running on: http://localhost:${port}/api/v1`);
+  const port = Number(requiredEnv('PORT'));
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error('PORT must be a whole number from 1 to 65535.');
+  }
+  const host = process.env.HOST?.trim() || '0.0.0.0';
+  await app.listen(port, host);
+  console.log(`Blish Spa ERP API listening on ${host}:${port}`);
 }
 
 bootstrap();

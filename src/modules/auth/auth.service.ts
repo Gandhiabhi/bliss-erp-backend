@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
+import { requiredEnv } from '../../load-env.js';
 import { PrismaService } from '../../database/prisma.service.js';
 import { LoginDto } from './dto/login.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
@@ -65,12 +66,12 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email };
 
     const accessToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
+      secret: requiredEnv('JWT_SECRET'),
       expiresIn: (process.env.JWT_EXPIRES_IN || '1d') as any,
     });
 
     const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_SECRET || 'blish-super-secure-refresh-jwt-secret-key-2026-production',
+      secret: requiredEnv('JWT_REFRESH_SECRET'),
       expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any,
     });
 
@@ -128,7 +129,7 @@ export class AuthService {
   async refreshToken(rawRefreshToken: string) {
     try {
       const payload = this.jwtService.verify(rawRefreshToken, {
-        secret: process.env.JWT_REFRESH_SECRET || 'blish-super-secure-refresh-jwt-secret-key-2026-production',
+        secret: requiredEnv('JWT_REFRESH_SECRET'),
       });
 
       const user = await this.prisma.user.findUnique({
@@ -146,12 +147,12 @@ export class AuthService {
 
       const newPayload = { sub: user.id, email: user.email };
       const newAccessToken = this.jwtService.sign(newPayload, {
-        secret: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
+        secret: requiredEnv('JWT_SECRET'),
         expiresIn: (process.env.JWT_EXPIRES_IN || '1d') as any,
       });
 
       const newRefreshToken = this.jwtService.sign(newPayload, {
-        secret: process.env.JWT_REFRESH_SECRET || 'blish-super-secure-refresh-jwt-secret-key-2026-production',
+        secret: requiredEnv('JWT_REFRESH_SECRET'),
         expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any,
       });
 

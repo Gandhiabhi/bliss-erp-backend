@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { requiredEnv } from '../../load-env.js';
 import { PrismaService } from '../../database/prisma.service.js';
 let JwtStrategy = class JwtStrategy extends PassportStrategy(Strategy) {
     prisma;
@@ -24,7 +25,7 @@ let JwtStrategy = class JwtStrategy extends PassportStrategy(Strategy) {
                 },
             ]),
             ignoreExpiration: false,
-            secretOrKey: process.env.JWT_SECRET || 'blish-super-secure-jwt-secret-key-2026-production-grade',
+            secretOrKey: requiredEnv('JWT_SECRET'),
         });
         this.prisma = prisma;
     }

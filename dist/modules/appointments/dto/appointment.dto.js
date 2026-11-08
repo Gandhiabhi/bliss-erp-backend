@@ -7,6 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a, _b;
 import { IsNotEmpty, IsOptional, IsString, IsDateString, IsEnum, } from 'class-validator';
 import { AppointmentStatus } from '@prisma/client';
 export class CreateAppointmentDto {
@@ -69,7 +70,7 @@ __decorate([
 __decorate([
     IsEnum(AppointmentStatus),
     IsOptional(),
-    __metadata("design:type", String)
+    __metadata("design:type", typeof (_a = typeof AppointmentStatus !== "undefined" && AppointmentStatus) === "function" ? _a : Object)
 ], CreateAppointmentDto.prototype, "status", void 0);
 export class UpdateAppointmentDto {
     serviceId;
@@ -114,7 +115,7 @@ __decorate([
 __decorate([
     IsEnum(AppointmentStatus),
     IsOptional(),
-    __metadata("design:type", String)
+    __metadata("design:type", typeof (_b = typeof AppointmentStatus !== "undefined" && AppointmentStatus) === "function" ? _b : Object)
 ], UpdateAppointmentDto.prototype, "status", void 0);
 __decorate([
     IsString(),

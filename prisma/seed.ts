@@ -1,12 +1,13 @@
+import { config } from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
+config();
+
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log('🧹 Purging all existing data from database...');
-
-  // 1. Clear all existing data in reverse order of foreign key dependencies
+async function purgeDatabase() {
+  console.log('SEED_RESET=true, removing existing rows...');
   await prisma.auditLog.deleteMany();
   await prisma.customerDocument.deleteMany();
   await prisma.customerNote.deleteMany();
@@ -14,8 +15,8 @@ async function main() {
   await prisma.payment.deleteMany();
   await prisma.invoice.deleteMany();
   await prisma.visitService.deleteMany();
-  await prisma.visit.deleteMany();
   await prisma.membershipService.deleteMany();
+  await prisma.visit.deleteMany();
   await prisma.membership.deleteMany();
   await prisma.planTemplateService.deleteMany();
   await prisma.planTemplate.deleteMany();
@@ -34,20 +35,34 @@ async function main() {
   await prisma.setting.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.branch.deleteMany();
+}
 
-  console.log('✓ Successfully erased all database tables.');
+async function main() {
+  if (process.env.SEED_RESET === 'true') {
+    await purgeDatabase();
+  } else {
+    console.log('Seeding without deleting existing guests, visits, or payments.');
+  }
 
   // 2. Provision System Roles
-  const roles = await Promise.all([
-    prisma.role.create({ data: { name: 'SUPER_ADMIN', description: 'Global Central Administrator with full system access', isSystem: true } }),
-    prisma.role.create({ data: { name: 'ADMIN', description: 'Headquarters Administrator', isSystem: true } }),
-    prisma.role.create({ data: { name: 'BRANCH_MANAGER', description: 'Branch General Manager', isSystem: true } }),
-    prisma.role.create({ data: { name: 'RECEPTIONIST', description: 'Front-desk Receptionist & Check-in Coordinator', isSystem: true } }),
-    prisma.role.create({ data: { name: 'STAFF', description: 'General Spa Staff', isSystem: true } }),
-    prisma.role.create({ data: { name: 'THERAPIST', description: 'Licensed Spa Therapist & Aesthetician', isSystem: true } }),
-    prisma.role.create({ data: { name: 'ACCOUNTANT', description: 'Financial & Billing Officer', isSystem: true } }),
-    prisma.role.create({ data: { name: 'REPORT_VIEWER', description: 'Auditor and Business Intelligence Analyst', isSystem: true } }),
-  ]);
+  const roles = await Promise.all(
+    [
+      { name: 'SUPER_ADMIN', description: 'Global Central Administrator with full system access', isSystem: true },
+      { name: 'ADMIN', description: 'Headquarters Administrator', isSystem: true },
+      { name: 'BRANCH_MANAGER', description: 'Branch General Manager', isSystem: true },
+      { name: 'RECEPTIONIST', description: 'Front-desk Receptionist & Check-in Coordinator', isSystem: true },
+      { name: 'STAFF', description: 'General Spa Staff', isSystem: true },
+      { name: 'THERAPIST', description: 'Licensed Spa Therapist & Aesthetician', isSystem: true },
+      { name: 'ACCOUNTANT', description: 'Financial & Billing Officer', isSystem: true },
+      { name: 'REPORT_VIEWER', description: 'Auditor and Business Intelligence Analyst', isSystem: true },
+    ].map((role) =>
+      prisma.role.upsert({
+        where: { name: role.name },
+        update: { description: role.description, isSystem: true },
+        create: role,
+      }),
+    ),
+  );
 
   const roleMap = new Map(roles.map((r) => [r.name, r]));
 
@@ -112,32 +127,32 @@ async function main() {
   ];
 
   const permissions = await Promise.all(
-    permissionDefs.map((p) => prisma.permission.create({ data: p }))
+    permissionDefs.map((permission) =>
+      prisma.permission.upsert({
+        where: { name: permission.name },
+        update: { module: permission.module, description: permission.description },
+        create: permission,
+      }),
+    ),
   );
   console.log(`✓ Provisioned ${permissions.length} granular permissions`);
 
   // Map all permissions to SUPER_ADMIN role
   const superAdminRole = roleMap.get('SUPER_ADMIN')!;
-  await Promise.all(
-    permissions.map((perm) =>
-      prisma.rolePermission.create({
-        data: { roleId: superAdminRole.id, permissionId: perm.id },
-      })
-    )
-  );
+  await prisma.rolePermission.createMany({
+    data: permissions.map((perm) => ({ roleId: superAdminRole.id, permissionId: perm.id })),
+    skipDuplicates: true,
+  });
 
   // Map operational permissions to other system roles for future user provisioning
   const branchManagerRole = roleMap.get('BRANCH_MANAGER')!;
   const managerPerms = permissions.filter(
     (p) => !['branch.create', 'branch.delete', 'audit.read'].includes(p.name)
   );
-  await Promise.all(
-    managerPerms.map((perm) =>
-      prisma.rolePermission.create({
-        data: { roleId: branchManagerRole.id, permissionId: perm.id },
-      })
-    )
-  );
+  await prisma.rolePermission.createMany({
+    data: managerPerms.map((perm) => ({ roleId: branchManagerRole.id, permissionId: perm.id })),
+    skipDuplicates: true,
+  });
 
   const receptionistRole = roleMap.get('RECEPTIONIST')!;
   const recPerms = permissions.filter((p) =>
@@ -150,52 +165,59 @@ async function main() {
       'staff.read',
     ].includes(p.name)
   );
-  await Promise.all(
-    recPerms.map((perm) =>
-      prisma.rolePermission.create({
-        data: { roleId: receptionistRole.id, permissionId: perm.id },
-      })
-    )
-  );
+  await prisma.rolePermission.createMany({
+    data: recPerms.map((perm) => ({ roleId: receptionistRole.id, permissionId: perm.id })),
+    skipDuplicates: true,
+  });
 
   const therapistRole = roleMap.get('THERAPIST')!;
   const therPerms = permissions.filter((p) =>
     ['appointment.read', 'visit.read', 'visit.complete', 'service.read'].includes(p.name)
   );
-  await Promise.all(
-    therPerms.map((perm) =>
-      prisma.rolePermission.create({
-        data: { roleId: therapistRole.id, permissionId: perm.id },
-      })
-    )
-  );
+  await prisma.rolePermission.createMany({
+    data: therPerms.map((perm) => ({ roleId: therapistRole.id, permissionId: perm.id })),
+    skipDuplicates: true,
+  });
   console.log('✓ Configured RBAC role-permission assignments');
 
-  // 4. Create Single Super Admin Account
-  const superAdminPasswordHash = await bcrypt.hash('Bhairaram@123', 10);
+  const isProduction = process.env.NODE_ENV === 'production';
+  const adminEmail = process.env.SEED_ADMIN_EMAIL?.trim() || (isProduction ? '' : 'bhairaram@gmail.com');
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD || (isProduction ? '' : 'Bhairaram@123');
+  const firstName = process.env.SEED_ADMIN_FIRST_NAME?.trim() || 'Bhairaram';
+  const lastName = process.env.SEED_ADMIN_LAST_NAME?.trim() || 'SuperAdmin';
 
-  const superAdmin = await prisma.user.create({
-    data: {
-      email: 'bhairaram@gmail.com',
-      passwordHash: superAdminPasswordHash,
-      firstName: 'Bhairaram',
-      lastName: 'SuperAdmin',
-      phone: null,
-      branchId: null, // Global access across all branches
-      isActive: true,
-      userRoles: {
-        create: {
-          roleId: superAdminRole.id,
+  if (!adminEmail || !adminPassword) {
+    const existingUsers = await prisma.user.count();
+    if (existingUsers === 0) {
+      throw new Error('Set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD before seeding an empty production database.');
+    }
+    console.log('Admin password was not changed. Existing users were left as they are.');
+  } else {
+    const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
+    if (existing) {
+      console.log(`Admin ${adminEmail} already exists. Password was left unchanged.`);
+    } else {
+      const passwordHash = await bcrypt.hash(adminPassword, 10);
+      await prisma.user.create({
+        data: {
+          email: adminEmail,
+          passwordHash,
+          firstName,
+          lastName,
+          phone: null,
+          branchId: null,
+          isActive: true,
+          userRoles: { create: { roleId: superAdminRole.id } },
         },
-      },
-    },
-  });
+      });
+      console.log(`Super admin created: ${adminEmail}`);
+      if (!process.env.SEED_ADMIN_PASSWORD) {
+        console.log('Development password: Bhairaram@123');
+      }
+    }
+  }
 
-  console.log(`✓ Super Admin created successfully:`);
-  console.log(`   Email:    ${superAdmin.email}`);
-  console.log(`   Password: Bhairaram@123`);
-  console.log(`   Role:     SUPER_ADMIN (Global Network Access)`);
-  console.log(`\n🎉 Database is clean and ready with only 1 Super Admin user!`);
+  console.log('Seed finished. Guest and billing records were not removed.');
 }
 
 main()
