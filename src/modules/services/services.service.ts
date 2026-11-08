@@ -14,6 +14,7 @@ import {
   CreateCategoryDto,
 } from './dto/service.dto.js';
 import { AuthenticatedUser } from '../../common/decorators/current-user.decorator.js';
+import { uniqueCode } from '../../common/utils/record-codes.js';
 
 @Injectable()
 export class ServicesService {
@@ -149,17 +150,22 @@ export class ServicesService {
   }
 
   async create(dto: CreateServiceDto, actor: AuthenticatedUser) {
-    const existing = await this.prisma.service.findUnique({
-      where: { code: dto.code.toUpperCase().trim() },
-    });
+    const requested = dto.code?.trim();
+    let code = requested ? requested.toUpperCase() : uniqueCode('SVC', dto.name);
 
-    if (existing) {
-      throw new ConflictException(`Service code '${dto.code}' already exists`);
+    if (requested) {
+      const existing = await this.prisma.service.findUnique({ where: { code } });
+      if (existing) {
+        throw new ConflictException(`Service code '${code}' already exists`);
+      }
+    } else {
+      const taken = await this.prisma.service.findUnique({ where: { code } });
+      if (taken) code = uniqueCode('SVC', dto.name);
     }
 
     const service = await this.prisma.service.create({
       data: {
-        code: dto.code.toUpperCase().trim(),
+        code,
         name: dto.name,
         categoryId: dto.categoryId || null,
         description: dto.description,

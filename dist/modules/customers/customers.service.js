@@ -122,6 +122,7 @@ let CustomersService = class CustomersService {
                 visits: {
                     orderBy: { visitDate: 'desc' },
                     include: {
+                        membership: { select: { id: true, name: true, membershipCode: true } },
                         visitServices: {
                             include: {
                                 service: true,
@@ -148,6 +149,10 @@ let CustomersService = class CustomersService {
                 },
                 payments: {
                     orderBy: { paymentDate: 'desc' },
+                    include: {
+                        membership: { select: { id: true, name: true, membershipCode: true } },
+                        invoice: { select: { id: true, invoiceNumber: true } },
+                    },
                 },
                 customerNotes: {
                     orderBy: { createdAt: 'desc' },

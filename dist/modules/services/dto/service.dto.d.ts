@@ -12,7 +12,7 @@ export declare class UpdateVariantDto {
     status?: string;
 }
 export declare class CreateServiceDto {
-    code: string;
+    code?: string;
     name: string;
     categoryId?: string;
     description?: string;
