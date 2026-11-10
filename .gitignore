@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+dist
 
 # build output
 /dist
